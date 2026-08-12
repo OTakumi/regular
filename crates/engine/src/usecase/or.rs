@@ -1,4 +1,4 @@
-use crate::ast::AST;
+use crate::entity::ast::AST;
 
 pub fn fold_or(mut seq_or: Vec<AST>) -> Option<AST> {
     if seq_or.len() > 1 {
@@ -15,7 +15,7 @@ pub fn fold_or(mut seq_or: Vec<AST>) -> Option<AST> {
 
 mod tests {
     use super::*;
-    use crate::ast::AST;
+    use crate::entity::ast::AST;
 
     #[test]
     fn test_fold_or_emply() {

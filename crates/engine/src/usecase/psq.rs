@@ -1,10 +1,5 @@
-use crate::{ast::AST, parser::ParseError};
-
-pub enum PSQ {
-    Plus,
-    Star,
-    Question,
-}
+use crate::entity::{ast::AST, psq::PSQ};
+use crate::shared::parse_error::ParseError;
 
 pub fn apply_quantifier(prev: Option<AST>, ast_type: PSQ, pos: usize) -> Result<AST, ParseError> {
     let prev_ast = prev.ok_or(ParseError::NoPrev(pos))?;
@@ -21,7 +16,6 @@ pub fn apply_quantifier(prev: Option<AST>, ast_type: PSQ, pos: usize) -> Result<
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ast::AST;
 
     #[test]
     fn test_apply_quantifier_plus() {
