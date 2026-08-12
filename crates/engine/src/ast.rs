@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum AST {
     Char(char),
     Plus(Box<AST>),
