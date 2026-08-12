@@ -1,7 +1,7 @@
 use crate::{
     ast::AST,
     or::fold_or,
-    psq::{PSQ, parse_plus_star_question},
+    psq::{PSQ, apply_quantifier},
 };
 use std::{
     error::Error,
@@ -9,7 +9,7 @@ use std::{
     mem::take,
 };
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum ParseError {
     InvalidEscape(usize, char),
     InvalidRightParen(usize),
@@ -70,9 +70,18 @@ pub fn parse(expr: &str) -> Result<AST, Box<ParseError>> {
         match &state {
             ParseState::Char => {
                 match c {
-                    '+' => parse_plus_star_question(&mut seq, PSQ::Plus, i)?,
-                    '*' => parse_plus_star_question(&mut seq, PSQ::Star, i)?,
-                    '?' => parse_plus_star_question(&mut seq, PSQ::Question, i)?,
+                    '+' => {
+                        let new_ast = apply_quantifier(seq.pop(), PSQ::Plus, i)?;
+                        seq.push(new_ast);
+                    }
+                    '*' => {
+                        let new_ast = apply_quantifier(seq.pop(), PSQ::Star, i)?;
+                        seq.push(new_ast);
+                    }
+                    '?' => {
+                        let new_ast = apply_quantifier(seq.pop(), PSQ::Question, i)?;
+                        seq.push(new_ast);
+                    }
                     '(' => {
                         let _prev = take(&mut seq);
                         let _prev_or = take(&mut seq_or);
